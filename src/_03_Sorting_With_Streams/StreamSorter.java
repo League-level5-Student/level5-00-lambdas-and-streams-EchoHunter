@@ -26,7 +26,7 @@ public class StreamSorter {
     }
 
     List<String> sortList(List<String> list) {
-        return null;
+    	return list.stream().sorted((s1, s2) ->  s1.compareTo(s2)).collect(Collectors.toList());
     }
     
     // =================== DO NOT MODIFY THE CODE BELOW ======================
