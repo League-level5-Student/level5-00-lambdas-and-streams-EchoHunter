@@ -76,7 +76,7 @@ public class Minesweeper extends PApplet {
      *  noneMatch() // returns true if no items in the stream match the condition
      */
     boolean checkWin() {
-        return cells.stream().filter((c) -> ((c.mine != true)&&(c.revealed == true))).count() == 0);
+    	return cells.stream().filter((c) -> c.revealed ==false).noneMatch((c) -> c.mine);
     }
     
     /*
@@ -96,7 +96,14 @@ public class Minesweeper extends PApplet {
      *        - - - -
      */
     void revealCell(Cell cell) {
-        
+        if(!cell.mine) {
+        	cell.revealed = true;
+        	if((cell.minesAround == 0)) {
+        		getNeighbors(cell).stream()
+        						  .filter((c) -> !c.revealed)
+        						  .forEach((c) -> revealCell(c));
+        	}
+        }
     }
     
     /*
@@ -111,7 +118,11 @@ public class Minesweeper extends PApplet {
      * 6. Use reduce() or sum() to count the number of 1s, i.e. mines
      */
     void setNumberOfSurroundingMines() {
-        
+        cells.stream().forEach((c) ->{
+        	c.minesAround = (int) getNeighbors(c).stream()
+        					.filter((cell) -> cell.mine)
+        					.count();
+        });
     }
     
     @Override
